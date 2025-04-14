@@ -1,37 +1,48 @@
-import { writeFileSync } from 'fs';
+const fs = require('fs');
+const path = require('path');
 
-export default async function handler(req, res) {
+module.exports = async (req, res) => {
   const { id } = req.query;
 
   if (!id) {
     return res.status(400).send('Missing ID');
   }
 
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+  const dataPath = path.join(__dirname, 'data.json');
 
-  // Отправка IP-адреса в Telegram-бота
-  await fetch(`https://api.telegram.org/bot<ТВОЙ_ТОКЕН>/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      chat_id: '<ЗДЕСЬ_БУДЕТ_ID_ПОЛЬЗОВАТЕЛЯ>',
-      text: `Сканирован тег с ID: ${id}\nIP: ${ip}`
-    })
-  });
-
-  // Пример получения taplink из data.json — будет позже заменено динамически
-  const data = {
-    "965ce123-4957-417b-b6fc-2f292cd6e026": "https://taplink.cc/example"
-  };
-
-  const redirectUrl = data[id];
-
-  if (!redirectUrl) {
-    return res.status(404).send('Ссылка не найдена');
+  let rawData;
+  try {
+    rawData = fs.readFileSync(dataPath, 'utf8');
+  } catch (err) {
+    return res.status(500).send('Ошибка загрузки базы данных.');
   }
 
-  res.writeHead(302, {
-    Location: redirectUrl
-  });
-  res.end();
-}
+  let json;
+  try {
+    json = JSON.parse(rawData);
+  } catch (err) {
+    return res.status(500).send('Ошибка чтения данных.');
+  }
+
+  // Ищем ссылку по UUID
+  let foundPet = null;
+  for (const userId in json) {
+    const user = json[userId];
+    if (!user.pets) continue;
+
+    for (const pet of user.pets) {
+      if (pet.uuid === id) {
+        foundPet = pet;
+        break;
+      }
+    }
+
+    if (foundPet) break;
+  }
+
+  if (foundPet) {
+    return res.writeHead(302, { Location: foundPet.link }).end();
+  } else {
+    return res.status(404).send('Питомец не найден. Ссылка недействительна.');
+  }
+};
