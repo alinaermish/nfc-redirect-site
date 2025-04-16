@@ -44,6 +44,11 @@
   <p>Определяем местоположение…</p>
 
   <script>
+      console.log('📍 Зашли на страницу location.html');
+    const params = new URLSearchParams(window.location.search);
+    const uuidFromURL = params.get("uuid");
+    console.log('🧬 UUID из строки запроса =', uuidFromURL);
+    
     async function sendLocation(position) {
       const params = new URLSearchParams(window.location.search);
       const uuid = params.get("uuid");
