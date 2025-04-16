@@ -2,10 +2,12 @@
   "version": 2,
   "builds": [
     { "src": "index.js", "use": "@vercel/node" },
-    { "src": "pages/api/*.js", "use": "@vercel/node" }
+    { "src": "get-link.js", "use": "@vercel/node" },
+    { "src": "send-location.js", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/redirect/(.*)", "dest": "/index.js" },
-    { "src": "/api/(.*)", "dest": "/pages/api/$1.js" }
+    { "src": "/api/get-link", "dest": "/get-link.js" },
+    { "src": "/api/send-location", "dest": "/send-location.js" }
   ]
 }
