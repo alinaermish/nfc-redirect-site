@@ -5,7 +5,7 @@ module.exports = (req, res) => {
   if (!uuid) {return res.status(400).send('hah UUID',req.query);}
   else {return res.status(400).send('hah2 UUID,${req.query},${req})');}
 
-  res.writeHead(302, {
+  res.writeHead(302, req.query, {
     Location: `/test.html`
   }).end();
 };
