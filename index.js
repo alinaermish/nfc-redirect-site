@@ -5,6 +5,6 @@ module.exports = (req, res) => {
   if (!uuid) return res.status(400).send('Missing UUID',req.query);
 
   res.writeHead(302, {
-    Location: `/location.html?uuid=${uuid}`
+    Location: `https://nfc-redirect-site.vercel.app/location.html?uuid=${uuid}`
   }).end();
 };
