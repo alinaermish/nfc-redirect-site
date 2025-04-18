@@ -4,7 +4,8 @@
   "builds": [
     { "src": "index.js", "use": "@vercel/node" },
     { "src": "get-link.js", "use": "@vercel/node" },
-    { "src": "send-location.js", "use": "@vercel/node" }
+    { "src": "send-location.js", "use": "@vercel/node" },
+    { "src": "test.html", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/redirect/(.*)", "dest": "/index.js" },
