@@ -5,14 +5,14 @@
     { "src": "index.js", "use": "@vercel/node" },
     { "src": "get-link.js", "use": "@vercel/node" },
     { "src": "send-location.js", "use": "@vercel/node" },
-    { "src": "test.html", "use": "@vercel/static" },
-    { "src": "location.html", "use": "@vercel/static" }
+    { "src": "test_1.html", "use": "@vercel/static" },
+    { "src": "public/**/*.html", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/redirect/(.*)", "dest": "/index.js" },
     { "src": "/api/get-link", "dest": "/get-link.js" },
     { "src": "/api/send-location", "dest": "/send-location.js" },
-    { "src": "/test", "dest": "/public/test.html" },
-    { "src": "/test", "dest": "/public/location.html" }
+    { "src": "/test", "dest": "/test.html" },
+    { "src": "/location", "dest": "/location.html" }
   ]
 }
