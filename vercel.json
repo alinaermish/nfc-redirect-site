@@ -10,6 +10,6 @@
     { "src": "/redirect/(.*)", "dest": "/index.js" },
     { "src": "/api/get-link", "dest": "/get-link.js" },
     { "src": "/api/send-location", "dest": "/send-location.js" },
-    { "src": "/test.html", "dest": "/test.html" }
+    { "src": "/", "dest": "/test.html" }
   ]
 }
