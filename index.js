@@ -3,5 +3,9 @@ module.exports = (req, res) => {
   console.log('🔍 REDIRECT uuid =', uuid); // добавили лог
 
   if (!uuid) {return res.status(400).send(`Missing UUID,${uuid}`);}
-  else {return res.status(400).send(`hah2 UUID,${req.query},${req})`);}
+  else {return res.status(400).send(`hah2 UUID,${uuid},${req})`);}
+
+  res.writeHead(302, {
+    Location: `/location.html?uuid=${uuid}`
+  }).end();
 };
