@@ -1,0 +1,1 @@
+return res.status(400).send(`I return only JS files`)
