@@ -5,8 +5,9 @@
     { "src": "index.js", "use": "@vercel/node" },
     { "src": "get-link.js", "use": "@vercel/node" },
     { "src": "send-location.js", "use": "@vercel/node" },
-    { "src": "test.html", "use": "@vercel/node" },
-    { "src": "check_js.js", "use": "@vercel/node" }
+    { "src": "test.html", "use": "@vercel/static" },
+    { "src": "check_js.js", "use": "@vercel/node" },
+    { "src": "location.html", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/redirect/(.*)", "dest": "/index.js" },
