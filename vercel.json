@@ -11,13 +11,5 @@
     { "src": "/api/get-link", "dest": "/get-link.js" },
     { "src": "/api/send-location", "dest": "/send-location.js" },
     { "src": "/api/check", "dest": "/test.html" }
-  ],
- 
-  "redirects": [
-    { "source": "/me", "destination": "/test.html", "permanent": true },
-    {
-      "source": "/(.*)",
-      "destination": "https://vercel.com/docs"
-    }
   ]
 }
