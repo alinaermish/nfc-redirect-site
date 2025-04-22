@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Locating...</title>
+  <title>Определение местоположения</title>
   <style>
     body {
       margin: 0;
@@ -44,16 +44,19 @@
   <p>Определяем местоположение…</p>
 
   <script>
-      console.log('📍 Зашли на страницу location.html');
-    const params = new URLSearchParams(window.location.search);
-    const uuidFromURL = params.get("uuid");
-    console.log('🧬 UUID из строки запроса =', uuidFromURL);
-    
     async function sendLocation(position) {
       const params = new URLSearchParams(window.location.search);
       const uuid = params.get("uuid");
 
-      if (!uuid) return;
+      console.log("📍 Получен UUID:", uuid);
+      console.log("📍 Координаты:", position.coords);
+
+      alert("📍 Отправляем локацию!\nUUID: " + uuid + "\nКоординаты: " + position.coords.latitude + ", " + position.coords.longitude);
+
+      if (!uuid) {
+        document.querySelector('p').textContent = "UUID не найден в URL.";
+        return;
+      }
 
       try {
         const response = await fetch('/api/get-link', {
@@ -69,18 +72,22 @@
         });
 
         const data = await response.json();
+        console.log("📨 Ответ от сервера:", data);
+
         if (data.redirectTo) {
+          alert("🔁 Переадресация на: " + data.redirectTo);
           window.location.href = data.redirectTo;
         } else {
           document.querySelector('p').textContent = "Ошибка: ссылка не найдена.";
         }
       } catch (e) {
-        console.error("Ошибка при отправке локации:", e);
+        console.error("❌ Ошибка при отправке локации:", e);
         document.querySelector('p').textContent = "Ошибка при отправке локации.";
       }
     }
 
-    function handleError() {
+    function handleError(error) {
+      console.error("❌ Ошибка геолокации:", error);
       document.querySelector('p').textContent = "Не удалось получить геолокацию.";
     }
 
