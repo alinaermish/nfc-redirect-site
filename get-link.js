@@ -2,45 +2,54 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
-
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
-  const { uuid, latitude, longitude } = req.body;
-  if (!uuid || !latitude || !longitude) {
-    return res.status(400).send('Missing data');
-  }
+  let body = '';
+  req.on('data', chunk => body += chunk);
+  req.on('end', () => {
+    try {
+      const { uuid, latitude, longitude } = JSON.parse(body);
 
-  const dataPath = path.join(process.cwd(), 'data.json');
-  const rawData = fs.readFileSync(dataPath, 'utf8');
-  const json = JSON.parse(rawData);
+      if (!uuid || !latitude || !longitude) {
+        return res.status(400).send('Missing data');
+      }
 
-  let link = null;
-  let ownerIds = [];
+      const dataPath = path.join(__dirname, 'data.json');
+      const rawData = fs.readFileSync(dataPath, 'utf8');
+      const json = JSON.parse(rawData);
 
-  for (const userId in json) {
-    const user = json[userId];
-    if (!user.pets) continue;
+      let link = null;
+      let ownerIds = [];
 
-    const pet = user.pets.find(p => p.uuid === uuid);
-    if (pet) {
-      link = pet.link;
-      ownerIds = pet.owner_ids;
-      break;
+      for (const userId in json) {
+        const user = json[userId];
+        if (!user.pets) continue;
+
+        const pet = user.pets.find(p => p.uuid === uuid);
+        if (pet) {
+          link = pet.link;
+          ownerIds = pet.owner_ids;
+          break;
+        }
+      }
+
+      if (!link || ownerIds.length === 0) {
+        return res.status(404).send('Pet not found');
+      }
+
+      const locationMessage = `🔔 Питомец найден!\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
+      const botToken = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
+
+      for (const id of ownerIds) {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+        https.get(url).on('error', () => {});
+      }
+
+      res.status(200).json({ redirectTo: link });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
     }
-  }
-
-  if (!link || ownerIds.length === 0) {
-    return res.status(404).send('Pet not found');
-  }
-
-  const locationMessage = `📍 ${uuid}\nhttps://maps.google.com/?q=${latitude},${longitude}`;
-
-  for (const id of ownerIds) {
-    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
-    https.get(url).on('error', (e) => console.error("Telegram error:", e));
-  }
-
-  res.status(200).json({ redirectTo: link });
+  });
 };
