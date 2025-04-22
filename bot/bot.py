@@ -34,7 +34,12 @@ def save_data(data):
 
 def push_to_github():
     try:
-        repo_dir = os.path.dirname(DATA_FILE)
+        repo_dir = os.getcwd()
+
+        # 🛠 Настройка имени и почты Git
+        subprocess.run(["git", "-C", repo_dir, "config", "user.email", "bot@findmypet.com"], check=True)
+        subprocess.run(["git", "-C", repo_dir, "config", "user.name", "FindMyPetBot"], check=True)
+
         subprocess.run(["git", "-C", repo_dir, "add", "data.json"], check=True)
         subprocess.run(["git", "-C", repo_dir, "commit", "-m", "update data.json from bot"], check=True)
         subprocess.run([
