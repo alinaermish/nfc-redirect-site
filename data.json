@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_pet_name",
+        "step": "waiting_for_link",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -18,15 +18,17 @@
                 ],
                 "name": "\u0420\u043e\u043d\u0438",
                 "uuid": "0201936f-1619-4edd-80b4-8420e5d22c01"
+            },
+            {
+                "link": "https://colife.ae/catalog",
+                "include_self": true,
+                "owner_ids": [
+                    "386726980",
+                    "302108623"
+                ],
+                "name": "\u0421\u0443\u0447\u043a\u0430",
+                "uuid": "21134068-9bfe-4d78-ab44-f0f97ea26e47"
             }
-        ],
-        "current_pet": {
-            "link": "https://colife.ae/catalog",
-            "include_self": true,
-            "owner_ids": [
-                "386726980",
-                "302108623"
-            ]
-        }
+        ]
     }
 }
