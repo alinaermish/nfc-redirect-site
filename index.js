@@ -6,6 +6,6 @@ module.exports = (req, res) => {
   // else return res.status(400).send(`hah2 UUID,${uuid},${req})`);
 
   res.writeHead(302, {
-    Location: `/public/location.html?uuid=${uuid}`
+    Location: `/location.html?uuid=${uuid}`
   }).end();
 };
