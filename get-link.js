@@ -49,20 +49,36 @@ module.exports = async (req, res) => {
       }
 
       const locationMessage = `🔔 Питомец найден!\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
-      const botToken = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
+      const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
 
       for (const id of ownerIds) {
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
-        console.log("📬 [GET-LINK] Отправка в Telegram ID:", id);
+        const postData = `chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
 
-        https.get(url, tgRes => {
-          tgRes.on('data', () => {});
+        const options = {
+          hostname: 'api.telegram.org',
+          path: `/bot${BOT_TOKEN}/sendMessage`,
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': Buffer.byteLength(postData),
+          },
+        };
+
+        const tgReq = https.request(options, tgRes => {
+          let responseData = '';
+          tgRes.on('data', chunk => responseData += chunk);
           tgRes.on('end', () => {
-            console.log(`✅ [GET-LINK] Сообщение отправлено пользователю ${id}`);
+            console.log(`📨 [GET-LINK] Ответ Telegram для ID ${id}:`, responseData);
           });
-        }).on('error', (err) => {
-          console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
         });
+
+        tgReq.on('error', (err) => {
+          console.log("❌ [GET-LINK] Ошибка при отправке в Telegram:", err.message);
+        });
+
+        tgReq.write(postData);
+        tgReq.end();
+        console.log("📬 [GET-LINK] Отправлено в Telegram ID:", id);
       }
 
       console.log("➡️ [GET-LINK] Перенаправление на:", link);
