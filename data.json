@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_recipient",
+        "step": "ask_other_id",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -21,7 +21,8 @@
             }
         ],
         "current_pet": {
-            "link": "https://colife.ae/catalog"
+            "link": "https://colife.ae/catalog",
+            "include_self": true
         }
     }
 }
