@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
+const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
+
 module.exports = async (req, res) => {
   console.log("📩 [GET-LINK] Новый запрос получен");
 
@@ -12,7 +14,8 @@ module.exports = async (req, res) => {
 
   let body = '';
   req.on('data', chunk => body += chunk);
-  req.on('end', () => {
+
+  req.on('end', async () => {
     try {
       console.log("📦 [GET-LINK] Получено тело:", body);
       const { uuid, latitude, longitude } = JSON.parse(body);
@@ -22,10 +25,8 @@ module.exports = async (req, res) => {
         return res.status(400).send('Missing data');
       }
 
-      console.log("🔍 [GET-LINK] UUID:", uuid);
       const dataPath = path.join(__dirname, 'data.json');
-      const rawData = fs.readFileSync(dataPath, 'utf8');
-      const json = JSON.parse(rawData);
+      const json = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
       let link = null;
       let ownerIds = [];
@@ -49,37 +50,25 @@ module.exports = async (req, res) => {
       }
 
       const locationMessage = `🔔 Питомец найден!\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
-      const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
 
-      for (const id of ownerIds) {
-        const postData = `chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+      // Ждём все отправки
+      await Promise.all(ownerIds.map(id => {
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+        return new Promise((resolve, reject) => {
+          const request = https.get(url, (tgRes) => {
+            tgRes.on('data', () => {});
+            tgRes.on('end', () => {
+              console.log(`📬 [GET-LINK] Отправлено в Telegram ID: ${id}`);
+              resolve();
+            });
+          });
 
-        const options = {
-          hostname: 'api.telegram.org',
-          path: `/bot${BOT_TOKEN}/sendMessage`,
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Length': Buffer.byteLength(postData),
-          },
-        };
-
-        const tgReq = https.request(options, tgRes => {
-          let responseData = '';
-          tgRes.on('data', chunk => responseData += chunk);
-          tgRes.on('end', () => {
-            console.log(`📨 [GET-LINK] Ответ Telegram для ID ${id}:`, responseData);
+          request.on('error', (err) => {
+            console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
+            resolve(); // не reject — чтобы не прерывать выполнение
           });
         });
-
-        tgReq.on('error', (err) => {
-          console.log("❌ [GET-LINK] Ошибка при отправке в Telegram:", err.message);
-        });
-
-        tgReq.write(postData);
-        tgReq.end();
-        console.log("📬 [GET-LINK] Отправлено в Telegram ID:", id);
-      }
+      }));
 
       console.log("➡️ [GET-LINK] Перенаправление на:", link);
       res.status(200).json({ redirectTo: link });
