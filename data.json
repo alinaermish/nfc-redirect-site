@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_other_id",
+        "step": "ask_pet_name",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -22,7 +22,11 @@
         ],
         "current_pet": {
             "link": "https://colife.ae/catalog",
-            "include_self": true
+            "include_self": true,
+            "owner_ids": [
+                "386726980",
+                "302108623"
+            ]
         }
     }
 }
