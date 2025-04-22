@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "waiting_for_link",
+        "step": "confirm_redirect",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -10,7 +10,18 @@
                 ],
                 "name": "Cicero",
                 "uuid": "1ed73584-7dda-46a4-9517-a030a2dd0476"
+            },
+            {
+                "link": "https://taplink.cc/ciceromaltese",
+                "owner_ids": [
+                    "302108623"
+                ],
+                "name": "\u0420\u043e\u043d\u0438",
+                "uuid": "0201936f-1619-4edd-80b4-8420e5d22c01"
             }
-        ]
+        ],
+        "current_pet": {
+            "link": "https://colife.ae/catalog"
+        }
     }
 }
