@@ -52,7 +52,8 @@ module.exports = async (req, res) => {
       const botToken = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
 
       for (const id of ownerIds) {
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+        const BOT_TOKEN = "8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ";
+        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;        
         console.log("📬 [GET-LINK] Отправка в Telegram ID:", id);
         https.get(url).on('error', (err) => {
           console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
