@@ -2,6 +2,8 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
+const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
+
 module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).send('Method not allowed');
 
@@ -33,11 +35,11 @@ module.exports = async (req, res) => {
     return res.status(404).send('Pet not found');
   }
 
-  const locationMessage = `🔔 Питомец был найден!\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
+  const locationMessage = `📍 ${uuid}\nhttps://maps.google.com/?q=${latitude},${longitude}`;
 
   for (const id of ownerIds) {
-    const url = `https://api.telegram.org/bot<8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ>/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
-    https.get(url).on('error', () => {});
+    const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+    https.get(url).on('error', (e) => console.error("Telegram error:", e));
   }
 
   res.status(200).json({ redirectTo: link });
