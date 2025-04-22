@@ -1,11 +1,17 @@
 {
   "version": 2,
+  "public": true,
   "builds": [
+
     { "src": "get-link.js", "use": "@vercel/node" },
-    { "src": "send-location.js", "use": "@vercel/node" }
+    { "src": "send-location.js", "use": "@vercel/node" },
+    { "src": "public/**/*.html", "use": "@vercel/static" }
   ],
   "routes": [
+    
     { "src": "/api/get-link", "dest": "/get-link.js" },
-    { "src": "/api/send-location", "dest": "/send-location.js" }
+    { "src": "/api/send-location", "dest": "/send-location.js" },
+    { "src": "/test", "dest": "/public/test.html" },
+    { "src": "/location", "dest": "/public/location.html" }
   ]
 }
