@@ -2,8 +2,6 @@ import logging
 import json
 import uuid
 import asyncio
-import subprocess
-import os
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CommandHandler, filters, ContextTypes
 
@@ -11,14 +9,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TOKEN = "8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ"
-DATA_FILE = os.path.join(os.path.dirname(__file__), "data.json")
-
-GITHUB_REPO = "https://github.com/alinaermish/nfc-redirect-site.git"
-BRANCH_NAME = "main"
-GIT_USERNAME = "alinaermish"
-import os
-GIT_TOKEN = os.getenv("GIT_TOKEN")
-
+DATA_FILE = "data.json"
 
 def load_data():
     try:
@@ -30,25 +21,6 @@ def load_data():
 def save_data(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
-    push_to_github()
-
-def push_to_github():
-    try:
-        repo_dir = "/app"  # путь внутри Render
-        subprocess.run(["git", "-C", repo_dir, "checkout", BRANCH_NAME], check=True)
-        subprocess.run(["git", "-C", repo_dir, "config", "user.name", "findmypetbot"], check=True)
-        subprocess.run(["git", "-C", repo_dir, "config", "user.email", "bot@findmypet.com"], check=True)
-        subprocess.run(["git", "-C", repo_dir, "add", "data.json"], check=True)
-        subprocess.run(["git", "-C", repo_dir, "commit", "-m", "update data.json from bot"], check=True)
-        subprocess.run([
-            "git", "-C", repo_dir, "push",
-            f"https://{GIT_USERNAME}:{GIT_TOKEN}@github.com/{GIT_USERNAME}/nfc-redirect-site.git",
-            BRANCH_NAME
-        ], check=True)
-        print("✅ Изменения отправлены на GitHub.")
-    except subprocess.CalledProcessError as e:
-        print("❌ Ошибка при пуше в GitHub:", e)
-
 
 def is_valid_link(link):
     return link.startswith("http://") or link.startswith("https://")
@@ -173,4 +145,3 @@ try:
     print("Bot is already running in an existing event loop. Use run_bot() manually if needed.")
 except RuntimeError:
     asyncio.run(run_bot())
-# just a redeploy trigger
