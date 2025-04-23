@@ -3,7 +3,7 @@ import json
 import uuid
 import asyncio
 import os
-import requests
+import requests # type: ignore
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
