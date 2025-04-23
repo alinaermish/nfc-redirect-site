@@ -2,6 +2,7 @@ import logging
 import json
 import uuid
 import asyncio
+import httpx
 from telegram import Update, KeyboardButton, ReplyKeyboardMarkup
 from telegram.ext import Application, MessageHandler, CommandHandler, filters, ContextTypes
 
@@ -10,6 +11,9 @@ logger = logging.getLogger(__name__)
 
 TOKEN = "8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ"
 DATA_FILE = "data.json"
+GITHUB_API_URL = "https://api.github.com/repos/alinaermish/nfc-redirect-site/contents/data.json"
+GITHUB_TOKEN = "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"
+
 
 def load_data():
     try:
@@ -18,12 +22,44 @@ def load_data():
     except FileNotFoundError:
         return {}
 
+
 def save_data(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
+    asyncio.create_task(push_to_github(data))
+
+
+async def push_to_github(data):
+    async with httpx.AsyncClient() as client:
+        headers = {
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github.v3+json"
+        }
+
+        # Получим текущий SHA
+        get_response = await client.get(GITHUB_API_URL, headers=headers)
+        if get_response.status_code != 200:
+            print("❌ Не удалось получить SHA файла на GitHub")
+            return
+        sha = get_response.json()["sha"]
+
+        update_payload = {
+            "message": "update data.json from bot",
+            "content": httpx._models._encode(json.dumps(data, indent=4).encode()).decode(),
+            "sha": sha,
+            "branch": "main"
+        }
+
+        put_response = await client.put(GITHUB_API_URL, headers=headers, json=update_payload)
+        if put_response.status_code == 200 or put_response.status_code == 201:
+            print("✅ Успешно обновлено на GitHub")
+        else:
+            print("❌ Ошибка при обновлении GitHub:", put_response.text)
+
 
 def is_valid_link(link):
     return link.startswith("http://") or link.startswith("https://")
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.message.from_user.id)
@@ -34,6 +70,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     }
     save_data(data)
     await update.message.reply_text("Привет! Пожалуйста, пришли ссылку на Taplink или другую ссылку, которую ты хочешь, чтобы увидел нашедший👀")
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.message.from_user.id)
@@ -133,13 +170,13 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
         await update.message.reply_text("Пожалуйста, следуй шагам. Начни с отправки ссылки.")
 
+
 def run_bot():
     application = Application.builder().token(TOKEN).build()
     application.add_handler(CommandHandler("start", start))
     application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     return application.run_polling()
 
-# Запускаем, если код не крутится в уже работающем event loop
 try:
     asyncio.get_running_loop()
     print("Bot is already running in an existing event loop. Use run_bot() manually if needed.")
