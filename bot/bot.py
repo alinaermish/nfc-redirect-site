@@ -34,12 +34,10 @@ def save_data(data):
 
 def push_to_github():
     try:
-        repo_dir = os.getcwd()
-
-        # 🛠 Настройка имени и почты Git
+        repo_dir = "/app"  # путь внутри Render
+        subprocess.run(["git", "-C", repo_dir, "checkout", BRANCH_NAME], check=True)
+        subprocess.run(["git", "-C", repo_dir, "config", "user.name", "findmypetbot"], check=True)
         subprocess.run(["git", "-C", repo_dir, "config", "user.email", "bot@findmypet.com"], check=True)
-        subprocess.run(["git", "-C", repo_dir, "config", "user.name", "FindMyPetBot"], check=True)
-
         subprocess.run(["git", "-C", repo_dir, "add", "data.json"], check=True)
         subprocess.run(["git", "-C", repo_dir, "commit", "-m", "update data.json from bot"], check=True)
         subprocess.run([
@@ -50,6 +48,7 @@ def push_to_github():
         print("✅ Изменения отправлены на GitHub.")
     except subprocess.CalledProcessError as e:
         print("❌ Ошибка при пуше в GitHub:", e)
+
 
 def is_valid_link(link):
     return link.startswith("http://") or link.startswith("https://")
