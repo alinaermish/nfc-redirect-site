@@ -174,3 +174,4 @@ try:
     print("Bot is already running in an existing event loop. Use run_bot() manually if needed.")
 except RuntimeError:
     asyncio.run(run_bot())
+# just a redeploy trigger
