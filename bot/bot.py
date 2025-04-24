@@ -186,3 +186,25 @@ def run_bot():
 
 if __name__ == "__main__":
     run_bot()
+
+if __name__ == "__main__":
+    import threading
+    import http.server
+    import socketserver
+
+    # Запускаем фальшивый HTTP-сервер на порту 8080 (нужен Render)
+    def run_dummy_server():
+        PORT = 8080
+        Handler = http.server.SimpleHTTPRequestHandler
+        with socketserver.TCPServer(("", PORT), Handler) as httpd:
+            logger.info(f"Dummy HTTP server running at port {PORT}")
+            httpd.serve_forever()
+
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+
+    # Запускаем бота
+    try:
+        asyncio.get_running_loop()
+        print("Bot is already running in an existing event loop. Use run_bot() manually if needed.")
+    except RuntimeError:
+        asyncio.run(run_bot())
