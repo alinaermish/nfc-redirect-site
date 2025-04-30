@@ -158,7 +158,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
 
         redirect_url = f"https://findmypetbot.vercel.app/location?uuid={pet_uuid}"
-        await update.message.reply_text(f"Готово🎉 Вот ссылка:\n{redirect_url}")
+        await update.message.reply_text(f"Готово🎉 \nВот ссылка:\n{redirect_url}")
 
     else:
         data[user_id]["step"] = "waiting_for_link"
