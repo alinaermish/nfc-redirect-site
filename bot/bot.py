@@ -75,7 +75,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data = load_data()
     data[user_id] = {"step": "waiting_for_link", "pets": []}
     save_data(data)
-    await update.message.reply_text("Привет! Пришли ссылку на Taplink или другую, которую увидит нашедший.")
+    await update.message.reply_text("Привет👋🏼\nЭтот бот поможет тебе сделать ссылку для NFC тэга в адресснике✨\n\nПришли ссылку на Taplink или другую, которую ты хочешь, чтобы увидел нашедший👀 \nЭто может быть ссылка с твоими контактами, как taplink, или же просто ссылка на чат с тобой, например https://wa.me/+7XXXXXXXXXX")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.message.from_user.id)
@@ -85,7 +85,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user_id not in data:
         data[user_id] = {"step": "waiting_for_link", "pets": []}
         save_data(data)
-        await update.message.reply_text("Пришли ссылку на Taplink или другой сайт.")
+        await update.message.reply_text("Пришли ссылку на Taplink или другую, которую ты хочешь, чтобы увидел нашедший👀")
         return
 
     step = data[user_id].get("step")
@@ -100,14 +100,14 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 reply_markup=ReplyKeyboardMarkup([["Да", "Нет"]], one_time_keyboard=True, resize_keyboard=True)
             )
         else:
-            await update.message.reply_text("Это не похоже на ссылку. Начни с https://")
+            await update.message.reply_text("Это не похоже на ссылку. Попробуй ещё раз. \nПопробуй начать с https://")
 
     elif step == "confirm_redirect":
         if text.lower() == "да":
             data[user_id]["step"] = "ask_recipient"
             save_data(data)
             await update.message.reply_text(
-                "Кому отправлять геолокацию?\nВыбери вариант:",
+                "Кому отправлять геолокацию питомца, когда его найдут?\nВыбери вариант:",
                 reply_markup=ReplyKeyboardMarkup(
                     [["Мне", "Мне и другому человеку", "Другому человеку"]],
                     one_time_keyboard=True, resize_keyboard=True
@@ -125,12 +125,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             data[user_id]["current_pet"]["owner_ids"] = [user_id]
             data[user_id]["step"] = "ask_pet_name"
             save_data(data)
-            await update.message.reply_text("Как зовут питомца?")
+            await update.message.reply_text("Как зовут твоего питомца?🦄")
         elif text in ["Мне и другому человеку", "Другому человеку"]:
             data[user_id]["step"] = "ask_other_id"
             data[user_id]["current_pet"]["include_self"] = (text == "Мне и другому человеку")
             save_data(data)
-            await update.message.reply_text("Отправь Telegram ID другого человека.")
+            await update.message.reply_text("Пожалуйста, отправь Telegram ID другого человека.\nЕсли не знаешь, как найти ID, напиши @userinfobot и перешли ему любое сообщение от нужного человека и он покажет его ID.\nКак сделаешь, пришли в этот чат ID\n\nНе забудь, чтобы бот смог отправить геолокацию другому человеку, он должен присоединиться к боту (написать в чат бота /start)")
         else:
             await update.message.reply_text("Выбери один из вариантов.")
 
@@ -144,9 +144,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             data[user_id]["current_pet"]["owner_ids"] = owner_ids
             data[user_id]["step"] = "ask_pet_name"
             save_data(data)
-            await update.message.reply_text("Как зовут питомца?")
+            await update.message.reply_text("Как зовут твоего питомца?🦄")
         else:
-            await update.message.reply_text("ID должен быть из цифр.")
+            await update.message.reply_text("ID должен состоять из цифр🙈")
 
     elif step == "ask_pet_name":
         data[user_id]["current_pet"]["name"] = text
@@ -158,12 +158,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
 
         redirect_url = f"https://findmypetbot.vercel.app/location?uuid={pet_uuid}"
-        await update.message.reply_text(f"Готово! Вот ссылка:\n{redirect_url}")
+        await update.message.reply_text(f"Готово🎉 Вот ссылка:\n{redirect_url}")
 
     else:
         data[user_id]["step"] = "waiting_for_link"
         save_data(data)
-        await update.message.reply_text("Начни сначала. Пришли ссылку.")
+        await update.message.reply_text("Начни сначала, пришли ссылку🔗")
 
 def main():
     def fake_server():
