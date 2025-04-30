@@ -3,7 +3,9 @@ import json
 import uuid
 import asyncio
 import os
-import requests # type: ignore
+import requests  # type: ignore
+import socket
+import threading
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
@@ -44,11 +46,11 @@ def push_to_github():
         sha = get_resp.json().get("sha") if get_resp.status_code == 200 else None
 
         encoded_content = content.encode("utf-8")
-        base64_content = json.dumps(encoded_content.decode("utf-8")).encode("utf-8").decode("unicode_escape").encode("utf-8").decode("utf-8")
+        base64_content = encoded_content.decode("utf-8").encode("ascii", "ignore").decode("utf-8").encode("base64").decode()
 
         payload = {
             "message": "update data.json from bot",
-            "content": base64_content.encode("utf-8").decode("utf-8").encode("base64").decode(),
+            "content": base64_content,
             "branch": GITHUB_BRANCH
         }
 
@@ -161,35 +163,24 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
         await update.message.reply_text("Начни сначала. Пришли ссылку.")
 
-def run_bot():
+# Запуск Telegram-бота + фальшивый сервер
+def main():
+    # Фальшивый порт для Render
+    def fake_server():
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.bind(("0.0.0.0", 8080))
+            s.listen()
+            while True:
+                conn, addr = s.accept()
+                with conn:
+                    conn.sendall(b"HTTP/1.1 200 OK\nContent-Type: text/plain\n\nFake port is live.\n")
+
+    threading.Thread(target=fake_server, daemon=True).start()
+
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    return app.run_polling()
+    app.run_polling()
 
-try:
-    asyncio.get_running_loop()
-    print("⚠️ Event loop already running.")
-except RuntimeError:
-    asyncio.run(run_bot())
-# Запускаем бота и фальшивый веб-сервер для Render
-try:
-    asyncio.get_running_loop()
-    print("⚠️ Event loop already running.")
-except RuntimeError:
-    asyncio.run(run_bot())
-
-# — фальшивый порт —
-import socket
-import threading
-
-def fake_server():
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        s.bind(("0.0.0.0", 8080))
-        s.listen()
-        while True:
-            conn, addr = s.accept()
-            with conn:
-                conn.sendall(b"HTTP/1.1 200 OK\nContent-Type: text/plain\n\nThis is a fake port.\n")
-
-threading.Thread(target=fake_server, daemon=True).start()
+if __name__ == "__main__":
+    main()
