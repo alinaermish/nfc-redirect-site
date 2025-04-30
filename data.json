@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "waiting_for_link",
+        "step": "confirm_redirect",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -10,7 +10,10 @@
                 "name": "test8",
                 "uuid": "fe5d9ed5-ab1f-4ca3-af4b-b94275d686b7"
             }
-        ]
+        ],
+        "current_pet": {
+            "link": "https://wa.me/+79050817547"
+        }
     },
     "386726980": {
         "step": "waiting_for_link",
