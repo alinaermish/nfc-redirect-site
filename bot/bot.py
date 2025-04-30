@@ -33,6 +33,8 @@ def save_data(data):
 
 def push_to_github():
     try:
+        print("🚀 push_to_github() вызвана")
+
         with open(DATA_FILE, "r") as f:
             content = f.read()
 
@@ -42,22 +44,26 @@ def push_to_github():
             "Accept": "application/vnd.github+json"
         }
 
+        # Сначала получим SHA
         get_resp = requests.get(url, headers=headers)
+        print("📥 Ответ GET от GitHub:", get_resp.status_code, get_resp.text)
         sha = get_resp.json().get("sha") if get_resp.status_code == 200 else None
 
-        encoded_content = content.encode("utf-8")
-        base64_content = encoded_content.decode("utf-8").encode("ascii", "ignore").decode("utf-8").encode("base64").decode()
+        # Кодируем контент
+        import base64
+        base64_content = base64.b64encode(content.encode("utf-8")).decode("utf-8")
 
         payload = {
             "message": "update data.json from bot",
             "content": base64_content,
             "branch": GITHUB_BRANCH
         }
-
         if sha:
             payload["sha"] = sha
 
         res = requests.put(url, json=payload, headers=headers)
+        print("📤 Ответ PUT от GitHub:", res.status_code, res.text)
+
         if res.status_code not in [200, 201]:
             print("❌ GitHub API push failed:", res.json())
         else:
