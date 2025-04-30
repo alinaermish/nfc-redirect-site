@@ -1,27 +1,37 @@
 {
     "302108623": {
-        "step": "ask_other_id",
+        "step": "confirm_redirect",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
+                "include_self": false,
                 "owner_ids": [
-                    "302108623"
+                    "386726980"
                 ],
-                "name": "test8",
-                "uuid": "fe5d9ed5-ab1f-4ca3-af4b-b94275d686b7"
+                "name": "Cicero",
+                "uuid": "1ed73584-7dda-46a4-9517-a030a2dd0476"
             },
             {
-                "link": "https://wa.me/+79050817547",
+                "link": "https://taplink.cc/ciceromaltese",
                 "owner_ids": [
                     "302108623"
                 ],
-                "name": "test9",
-                "uuid": "1fc6cafa-5120-47ff-a697-3d6d4bfa41a4"
+                "name": "\u0420\u043e\u043d\u0438",
+                "uuid": "0201936f-1619-4edd-80b4-8420e5d22c01"
+            },
+            {
+                "link": "https://colife.ae/catalog",
+                "include_self": true,
+                "owner_ids": [
+                    "386726980",
+                    "302108623"
+                ],
+                "name": "\u0421\u0443\u0447\u043a\u0430",
+                "uuid": "21134068-9bfe-4d78-ab44-f0f97ea26e47"
             }
         ],
         "current_pet": {
-            "link": "https://taplink.cc/ciceromaltese",
-            "include_self": true
+            "link": "https://taplink.cc/ciceromaltese"
         }
     },
     "386726980": {
