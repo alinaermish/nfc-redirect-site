@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "waiting_for_link",
+        "step": "confirm_redirect",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -29,18 +29,13 @@
                 "name": "\u0421\u0443\u0447\u043a\u0430",
                 "uuid": "21134068-9bfe-4d78-ab44-f0f97ea26e47"
             }
-        ]
+        ],
+        "current_pet": {
+            "link": "https://maps.google.com/?q=53.33680100599184,83.77001010379551"
+        }
     },
     "386726980": {
         "step": "waiting_for_link",
         "pets": []
-    },
-    "493715769": {
-        "step": "ask_other_id",
-        "pets": [],
-        "current_pet": {
-            "link": "https://taplink.cc/ciceromaltese",
-            "include_self": true
-        }
     }
 }
