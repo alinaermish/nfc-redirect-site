@@ -15,13 +15,16 @@
         ]
     },
     "386726980": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://wa.me/+79236510003",
-            "owner_ids": [
-                "386726980"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://wa.me/+79236510003",
+                "owner_ids": [
+                    "386726980"
+                ],
+                "name": "\u0416\u043c\u044b\u0445",
+                "uuid": "a619030f-38b9-43d6-b87e-d4a671c66ef3"
+            }
+        ]
     }
 }
