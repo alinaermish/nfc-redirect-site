@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_pet_name",
+        "step": "waiting_for_link",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -28,14 +28,16 @@
                 ],
                 "name": "\u0421\u0443\u0447\u043a\u0430",
                 "uuid": "21134068-9bfe-4d78-ab44-f0f97ea26e47"
+            },
+            {
+                "link": "https://maps.google.com/?q=53.33680100599184,83.77001010379551",
+                "owner_ids": [
+                    "302108623"
+                ],
+                "name": "test7",
+                "uuid": "83b78a96-6bbc-495c-b505-083fcb09b003"
             }
-        ],
-        "current_pet": {
-            "link": "https://maps.google.com/?q=53.33680100599184,83.77001010379551",
-            "owner_ids": [
-                "302108623"
-            ]
-        }
+        ]
     },
     "386726980": {
         "step": "waiting_for_link",
