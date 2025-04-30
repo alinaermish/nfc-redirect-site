@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_pet_name",
+        "step": "waiting_for_link",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -9,14 +9,16 @@
                 ],
                 "name": "test8",
                 "uuid": "fe5d9ed5-ab1f-4ca3-af4b-b94275d686b7"
+            },
+            {
+                "link": "https://wa.me/+79050817547",
+                "owner_ids": [
+                    "302108623"
+                ],
+                "name": "test9",
+                "uuid": "1fc6cafa-5120-47ff-a697-3d6d4bfa41a4"
             }
-        ],
-        "current_pet": {
-            "link": "https://wa.me/+79050817547",
-            "owner_ids": [
-                "302108623"
-            ]
-        }
+        ]
     },
     "386726980": {
         "step": "waiting_for_link",
