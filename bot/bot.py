@@ -7,6 +7,7 @@ import requests  # type: ignore
 import socket
 import threading
 import base64
+import httpx
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
@@ -19,7 +20,29 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = "alinaermish/nfc-redirect-site"
 GITHUB_BRANCH = "main"
 GITHUB_FILE_PATH = "data.json"
+SELF_URL = os.environ.get("RENDER_EXTERNAL_URL")
 
+# === GitHub JSON загрузка при старте ===
+def restore_data_from_github():
+    try:
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
+        headers = {
+            "Authorization": f"Bearer {GITHUB_TOKEN}",
+            "Accept": "application/vnd.github+json"
+        }
+        res = requests.get(url, headers=headers)
+        if res.status_code == 200:
+            content = res.json().get("content", "")
+            decoded = base64.b64decode(content).decode("utf-8")
+            with open(DATA_FILE, "w") as f:
+                f.write(decoded)
+            print("✅ data.json восстановлен из GitHub")
+        else:
+            print("⚠️ Не удалось получить data.json с GitHub:", res.text)
+    except Exception as e:
+        print("❌ Ошибка при загрузке data.json из GitHub:", e)
+
+# === Загрузка и сохранение ===
 def load_data():
     try:
         with open(DATA_FILE, "r") as f:
@@ -35,7 +58,6 @@ def save_data(data):
 def push_to_github():
     try:
         print("🚀 push_to_github() вызвана")
-
         with open(DATA_FILE, "rb") as f:
             base64_content = base64.b64encode(f.read()).decode("utf-8")
 
@@ -165,22 +187,40 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
         await update.message.reply_text("Начни сначала, пришли ссылку🔗")
 
-def main():
-    def fake_server():
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.bind(("0.0.0.0", 8080))
-            s.listen()
-            while True:
-                conn, addr = s.accept()
-                with conn:
-                    conn.sendall(b"HTTP/1.1 200 OK\nContent-Type: text/plain\n\nFake port is live.\n")
+# === Самопробуждение и запуск ===
+async def ping_self():
+    while True:
+        try:
+            if SELF_URL:
+                async with httpx.AsyncClient() as client:
+                    await client.get(SELF_URL)
+                print("📡 Self-ping successful")
+        except Exception as e:
+            print("❌ Self-ping failed:", e)
+        await asyncio.sleep(300)
 
+def fake_server():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("0.0.0.0", 8080))
+        s.listen()
+        while True:
+            conn, addr = s.accept()
+            with conn:
+                conn.sendall(b"HTTP/1.1 200 OK\nContent-Type: text/plain\n\nFake port is live.\n")
+
+def start_all():
+    restore_data_from_github()
     threading.Thread(target=fake_server, daemon=True).start()
-
+    loop = asyncio.get_event_loop()
+    loop.create_task(ping_self())
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-    app.run_polling()
+    loop.run_until_complete(app.run_polling())
 
 if __name__ == "__main__":
-    main()
+    try:
+        asyncio.get_running_loop()
+        print("⚠️ Event loop already running")
+    except RuntimeError:
+        start_all()
