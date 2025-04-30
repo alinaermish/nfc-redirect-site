@@ -49,7 +49,7 @@ module.exports = async (req, res) => {
         return res.status(404).send('Pet not found');
       }
 
-      const locationMessage = `🔔 Питомец найден!\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
+      const locationMessage = `🔔 Питомец найден\n🐾${pet.name || "Неизвестно"}\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
 
       // Ждём все отправки
       await Promise.all(ownerIds.map(id => {

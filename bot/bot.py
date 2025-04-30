@@ -21,6 +21,7 @@ GITHUB_REPO = "alinaermish/nfc-redirect-site"
 GITHUB_BRANCH = "main"
 GITHUB_FILE_PATH = "data.json"
 SELF_URL = os.environ.get("RENDER_EXTERNAL_URL")
+ADMIN_ID = 302108623
 
 # === GitHub JSON загрузка при старте ===
 def restore_data_from_github():
@@ -98,6 +99,12 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     data[user_id] = {"step": "waiting_for_link", "pets": []}
     save_data(data)
     await update.message.reply_text("Привет👋🏼\nЭтот бот поможет тебе сделать ссылку для NFC тэга в адресснике✨\n\nПришли ссылку на Taplink или другую, которую ты хочешь, чтобы увидел нашедший👀 \nЭто может быть ссылка с твоими контактами, как taplink, или же просто ссылка на чат с тобой, например https://wa.me/+7XXXXXXXXXX")
+
+async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user = update.message.from_user
+    mention = user.mention_html() if user.username else f"ID: {user.id}"
+    await context.bot.send_message(chat_id=ADMIN_ID, text=f"🚨 Кто-то вызвал помощь: {mention}", parse_mode="HTML")
+    await update.message.reply_text("Спасибо, твой запрос отправлен. Я свяжусь с тобой как можно скорее ✨")
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = str(update.message.from_user.id)
@@ -215,6 +222,7 @@ def start_all():
     loop.create_task(ping_self())
     app = Application.builder().token(TOKEN).build()
     app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_command))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     loop.run_until_complete(app.run_polling())
 
