@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [
             {
                 "link": "https://wa.me/+79050817547",
@@ -31,7 +31,10 @@
             }
         ],
         "current_pet": {
-            "link": "https://ublv.ddm.ovh"
+            "link": "https://ublv.ddm.ovh",
+            "owner_ids": [
+                "302108623"
+            ]
         }
     },
     "386726980": {
