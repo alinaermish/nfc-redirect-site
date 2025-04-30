@@ -15,7 +15,7 @@
         ]
     },
     "386726980": {
-        "step": "confirm_redirect",
+        "step": "ask_recipient",
         "pets": [],
         "current_pet": {
             "link": "https://wa.me/+79236510003"
