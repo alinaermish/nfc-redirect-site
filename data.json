@@ -1,10 +1,14 @@
 {
     "302108623": {
-        "step": "ask_other_id",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
             "link": "https://taplink.cc/ciceromaltese",
-            "include_self": true
+            "include_self": true,
+            "owner_ids": [
+                "386726980",
+                "302108623"
+            ]
         }
     },
     "386726980": {
