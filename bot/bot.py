@@ -6,6 +6,7 @@ import os
 import requests  # type: ignore
 import socket
 import threading
+import base64
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
@@ -35,8 +36,8 @@ def push_to_github():
     try:
         print("🚀 push_to_github() вызвана")
 
-        with open(DATA_FILE, "r") as f:
-            content = f.read()
+        with open(DATA_FILE, "rb") as f:
+            base64_content = base64.b64encode(f.read()).decode("utf-8")
 
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
         headers = {
@@ -44,14 +45,9 @@ def push_to_github():
             "Accept": "application/vnd.github+json"
         }
 
-        # Сначала получим SHA
         get_resp = requests.get(url, headers=headers)
         print("📥 Ответ GET от GitHub:", get_resp.status_code, get_resp.text)
         sha = get_resp.json().get("sha") if get_resp.status_code == 200 else None
-
-        # Кодируем контент
-        import base64
-        base64_content = base64.b64encode(content.encode("utf-8")).decode("utf-8")
 
         payload = {
             "message": "update data.json from bot",
@@ -169,9 +165,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_data(data)
         await update.message.reply_text("Начни сначала. Пришли ссылку.")
 
-# Запуск Telegram-бота + фальшивый сервер
 def main():
-    # Фальшивый порт для Render
     def fake_server():
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.bind(("0.0.0.0", 8080))
