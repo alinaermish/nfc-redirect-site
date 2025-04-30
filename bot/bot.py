@@ -26,20 +26,28 @@ ADMIN_ID = 302108623
 # === GitHub JSON загрузка при старте ===
 def restore_data_from_github():
     try:
+        print("⏳ Восстанавливаем data.json из GitHub...")
+
         url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github+json"
         }
+
         res = requests.get(url, headers=headers)
+        print("🔍 Ответ от GitHub:", res.status_code, res.text)
+
         if res.status_code == 200:
             content = res.json().get("content", "")
             decoded = base64.b64decode(content).decode("utf-8")
+
             with open(DATA_FILE, "w") as f:
                 f.write(decoded)
+
             print("✅ data.json восстановлен из GitHub")
         else:
-            print("⚠️ Не удалось получить data.json с GitHub:", res.text)
+            print("⚠️ Не удалось восстановить data.json. Ответ GitHub:", res.status_code)
+
     except Exception as e:
         print("❌ Ошибка при загрузке data.json из GitHub:", e)
 
