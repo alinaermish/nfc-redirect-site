@@ -1,7 +1,10 @@
 {
     "302108623": {
-        "step": "waiting_for_link",
-        "pets": []
+        "step": "confirm_redirect",
+        "pets": [],
+        "current_pet": {
+            "link": "https://taplink.cc/ciceromaltese"
+        }
     },
     "386726980": {
         "step": "waiting_for_link",
