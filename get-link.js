@@ -30,6 +30,7 @@ module.exports = async (req, res) => {
 
       let link = null;
       let ownerIds = [];
+      let foundPet = null;
 
       for (const userId in json) {
         const user = json[userId];
@@ -39,22 +40,23 @@ module.exports = async (req, res) => {
         if (pet) {
           link = pet.link;
           ownerIds = pet.owner_ids;
+          foundPet = pet;
           console.log("✅ [GET-LINK] Найден питомец:", pet.name);
           break;
         }
       }
 
-      if (!link || ownerIds.length === 0) {
+      if (!foundPet || !link || ownerIds.length === 0) {
         console.log("❌ [GET-LINK] Питомец не найден или нет владельцев.");
         return res.status(404).send('Pet not found');
       }
 
-      const locationMessage = `🔔 Питомец найден\n🐾${pet.name || "Неизвестно"}\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
+      const locationMessage = `🔔 Питомец найден\n🐾 ${foundPet.name || "Имя неизвестно"}\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
 
       // Ждём все отправки
       await Promise.all(ownerIds.map(id => {
         const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
           const request = https.get(url, (tgRes) => {
             tgRes.on('data', () => {});
             tgRes.on('end', () => {
@@ -65,7 +67,7 @@ module.exports = async (req, res) => {
 
           request.on('error', (err) => {
             console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
-            resolve(); // не reject — чтобы не прерывать выполнение
+            resolve();
           });
         });
       }));
