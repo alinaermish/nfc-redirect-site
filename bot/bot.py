@@ -11,11 +11,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TOKEN = os.environ.get("BOT_TOKEN")
-DATA_FILE = "bot/data.json"
+DATA_FILE = "data.json"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = "alinaermish/nfc-redirect-site"
 GITHUB_BRANCH = "main"
-GITHUB_FILE_PATH = "bot/data.json"
+GITHUB_FILE_PATH = "data.json"
 
 def load_data():
     try:
@@ -172,3 +172,24 @@ try:
     print("⚠️ Event loop already running.")
 except RuntimeError:
     asyncio.run(run_bot())
+# Запускаем бота и фальшивый веб-сервер для Render
+try:
+    asyncio.get_running_loop()
+    print("⚠️ Event loop already running.")
+except RuntimeError:
+    asyncio.run(run_bot())
+
+# — фальшивый порт —
+import socket
+import threading
+
+def fake_server():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("0.0.0.0", 8080))
+        s.listen()
+        while True:
+            conn, addr = s.accept()
+            with conn:
+                conn.sendall(b"HTTP/1.1 200 OK\nContent-Type: text/plain\n\nThis is a fake port.\n")
+
+threading.Thread(target=fake_server, daemon=True).start()
