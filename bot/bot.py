@@ -4,9 +4,6 @@ import uuid
 import asyncio
 import os
 import requests # type: ignore
-import threading
-import http.server
-import socketserver
 from telegram import Update, ReplyKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, ContextTypes, filters
 
@@ -14,10 +11,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 TOKEN = os.environ.get("BOT_TOKEN")
-DATA_FILE = "data.json"
+DATA_FILE = "bot/data.json"
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = "alinaermish/nfc-redirect-site"
 GITHUB_BRANCH = "main"
+GITHUB_FILE_PATH = "bot/data.json"
 
 def load_data():
     try:
@@ -36,18 +34,21 @@ def push_to_github():
         with open(DATA_FILE, "r") as f:
             content = f.read()
 
-        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/bot/data.json"
+        url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
         headers = {
             "Authorization": f"Bearer {GITHUB_TOKEN}",
             "Accept": "application/vnd.github+json"
         }
 
         get_resp = requests.get(url, headers=headers)
-        sha = get_resp.json()["sha"] if get_resp.status_code == 200 else None
+        sha = get_resp.json().get("sha") if get_resp.status_code == 200 else None
+
+        encoded_content = content.encode("utf-8")
+        base64_content = json.dumps(encoded_content.decode("utf-8")).encode("utf-8").decode("unicode_escape").encode("utf-8").decode("utf-8")
 
         payload = {
             "message": "update data.json from bot",
-            "content": content.encode("utf-8").decode("utf-8").encode("ascii").decode("unicode_escape").encode("base64").decode(),
+            "content": base64_content.encode("utf-8").decode("utf-8").encode("base64").decode(),
             "branch": GITHUB_BRANCH
         }
 
@@ -166,19 +167,8 @@ def run_bot():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
     return app.run_polling()
 
-if __name__ == "__main__":
-    # Фальшивый порт для Render (чтобы не отвалился)
-    def run_dummy_server():
-        PORT = 8080
-        Handler = http.server.SimpleHTTPRequestHandler
-        with socketserver.TCPServer(("", PORT), Handler) as httpd:
-            logger.info(f"⚙️ Dummy HTTP server running at port {PORT}")
-            httpd.serve_forever()
-
-    threading.Thread(target=run_dummy_server, daemon=True).start()
-
-    try:
-        asyncio.get_running_loop()
-        print("⚠️ Event loop already running.")
-    except RuntimeError:
-        asyncio.run(run_bot())
+try:
+    asyncio.get_running_loop()
+    print("⚠️ Event loop already running.")
+except RuntimeError:
+    asyncio.run(run_bot())
