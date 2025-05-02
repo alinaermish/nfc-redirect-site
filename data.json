@@ -26,5 +26,9 @@
                 "uuid": "a619030f-38b9-43d6-b87e-d4a671c66ef3"
             }
         ]
+    },
+    "746873176": {
+        "step": "waiting_for_link",
+        "pets": []
     }
 }
