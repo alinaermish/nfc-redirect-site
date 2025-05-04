@@ -36,11 +36,15 @@
         "pets": []
     },
     "736973959": {
-        "step": "ask_other_id",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
             "link": "https://wa.me/+79039477622",
-            "include_self": true
+            "include_self": true,
+            "owner_ids": [
+                "539703757",
+                "736973959"
+            ]
         }
     }
 }
