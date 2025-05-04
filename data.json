@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "waiting_for_link",
+        "step": "confirm_redirect",
         "pets": [
             {
                 "link": "https://taplink.cc/ciceromaltese",
@@ -12,7 +12,10 @@
                 "name": "\u0420\u043e\u043d\u0438",
                 "uuid": "2899870e-f295-4a11-82c2-5158a88f288b"
             }
-        ]
+        ],
+        "current_pet": {
+            "link": "https://taplink.cc/ciceromaltese"
+        }
     },
     "386726980": {
         "step": "waiting_for_link",
