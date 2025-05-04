@@ -36,15 +36,18 @@
         "pets": []
     },
     "736973959": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://wa.me/+79039477622",
-            "include_self": true,
-            "owner_ids": [
-                "539703757",
-                "736973959"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://wa.me/+79039477622",
+                "include_self": true,
+                "owner_ids": [
+                    "539703757",
+                    "736973959"
+                ],
+                "name": "\u0415\u0441\u0435\u043d\u0438\u043a",
+                "uuid": "7219ea6f-a433-4416-a90b-23e8abd25125"
+            }
+        ]
     }
 }
