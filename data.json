@@ -1,6 +1,6 @@
 {
     "302108623": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [
             {
                 "link": "https://taplink.cc/ciceromaltese",
@@ -14,7 +14,10 @@
             }
         ],
         "current_pet": {
-            "link": "https://taplink.cc/ciceromaltese"
+            "link": "https://taplink.cc/ciceromaltese",
+            "owner_ids": [
+                "302108623"
+            ]
         }
     },
     "386726980": {
