@@ -20,9 +20,9 @@ module.exports = async (req, res) => {
       console.log("📦 [GET-LINK] Получено тело:", body);
       const { uuid, latitude, longitude } = JSON.parse(body);
 
-      if (!uuid || !latitude || !longitude) {
-        console.log("⚠️ [GET-LINK] Отсутствуют данные:", { uuid, latitude, longitude });
-        return res.status(400).send('Missing data');
+      if (!uuid) {
+        console.log("⚠️ [GET-LINK] Отсутствует UUID");
+        return res.status(400).send('Missing uuid');
       }
 
       const dataPath = path.join(__dirname, 'data.json');
@@ -51,26 +51,28 @@ module.exports = async (req, res) => {
         return res.status(404).send('Pet not found');
       }
 
-      const locationMessage = `🔔 Питомец найден\n🐾 ${foundPet.name || "Имя неизвестно"}\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
+      if (latitude && longitude) {
+        const locationMessage = `🔔 Питомец найден\n🐾 ${foundPet.name || "Имя неизвестно"}\n📍 https://maps.google.com/?q=${latitude},${longitude}`;
 
-      // Ждём все отправки
-      await Promise.all(ownerIds.map(id => {
-        const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
-        return new Promise((resolve) => {
-          const request = https.get(url, (tgRes) => {
-            tgRes.on('data', () => {});
-            tgRes.on('end', () => {
-              console.log(`📬 [GET-LINK] Отправлено в Telegram ID: ${id}`);
+        await Promise.all(ownerIds.map(id => {
+          const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${id}&text=${encodeURIComponent(locationMessage)}`;
+          return new Promise((resolve) => {
+            const request = https.get(url, (tgRes) => {
+              tgRes.on('data', () => {});
+              tgRes.on('end', () => {
+                console.log(`📬 [GET-LINK] Отправлено в Telegram ID: ${id}`);
+                resolve();
+              });
+            });
+            request.on('error', (err) => {
+              console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
               resolve();
             });
           });
-
-          request.on('error', (err) => {
-            console.log("❌ [GET-LINK] Ошибка Telegram:", err.message);
-            resolve();
-          });
-        });
-      }));
+        }));
+      } else {
+        console.log("⚠️ [GET-LINK] Локация не предоставлена. Отправка уведомлений не требуется.");
+      }
 
       console.log("➡️ [GET-LINK] Перенаправление на:", link);
       res.status(200).json({ redirectTo: link });
