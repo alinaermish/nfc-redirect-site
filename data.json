@@ -44,7 +44,7 @@
         "pets": []
     },
     "736973959": {
-        "step": "confirm_redirect",
+        "step": "ask_recipient",
         "pets": [
             {
                 "link": "https://wa.me/+79039477622",
