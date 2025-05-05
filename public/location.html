@@ -86,25 +86,31 @@
 
     function handleError(error) {
       console.error("❌ Ошибка геолокации:", error);
+      alert("⚠️ Ты не дал доступ к локации — владелец не узнает, где его питомец…\n\nНо мы всё равно переведем тебя на страницу с контактами.");
+
       const params = new URLSearchParams(window.location.search);
       const uuid = params.get("uuid");
-      document.querySelector('p').textContent = "Ты не дал доступ к геолокации — владелец не узнает, где его питомец…\nСейчас мы всё равно перенаправим тебя на страницу с его контактами.";
 
       if (uuid) {
         fetch('/api/get-link', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ uuid, latitude: 0, longitude: 0 })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uuid, latitude: null, longitude: null })
         })
-        .then(response => response.json())
+        .then(res => res.json())
         .then(data => {
           if (data.redirectTo) {
             window.location.href = data.redirectTo;
+          } else {
+            document.querySelector('p').textContent = "Ошибка: ссылка не найдена.";
           }
         })
-        .catch(e => console.error("❌ Ошибка при фоллбеке:", e));
+        .catch(err => {
+          console.error("❌ Ошибка при запросе ссылки:", err);
+          document.querySelector('p').textContent = "Ошибка при запросе ссылки.";
+        });
+      } else {
+        document.querySelector('p').textContent = "UUID не найден в URL.";
       }
     }
 
