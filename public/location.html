@@ -52,8 +52,6 @@
       console.log("📍 Получен UUID:", uuid);
       console.log("📍 Координаты:", position.coords);
 
-      alert("📍 Отправляем локацию владельцу!" + "\nКоординаты: " + position.coords.latitude + ", " + position.coords.longitude + "\n\n‼️Пожалуйста, если вы не дали доступ к локации, отсканируйте NFC тэг снова и предоставьте доступ к геопозиции, чтобы владелец получил сообщение о том, что вы нашли питомца🙏🏻");
-
       if (!uuid) {
         document.querySelector('p').textContent = "UUID не найден в URL.";
         return;
@@ -76,7 +74,6 @@
         console.log("📨 Ответ от сервера:", data);
 
         if (data.redirectTo) {
-          alert("🔁 Сейчас мы переведем вас на страницу с контактами владельца");
           window.location.href = data.redirectTo;
         } else {
           document.querySelector('p').textContent = "Ошибка: ссылка не найдена.";
@@ -89,7 +86,26 @@
 
     function handleError(error) {
       console.error("❌ Ошибка геолокации:", error);
-      document.querySelector('p').textContent = "Не удалось получить геолокацию.";
+      const params = new URLSearchParams(window.location.search);
+      const uuid = params.get("uuid");
+      document.querySelector('p').textContent = "Ты не дал доступ к геолокации — владелец не узнает, где его питомец…\nСейчас мы всё равно перенаправим тебя на страницу с его контактами.";
+
+      if (uuid) {
+        fetch('/api/get-link', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ uuid, latitude: 0, longitude: 0 })
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.redirectTo) {
+            window.location.href = data.redirectTo;
+          }
+        })
+        .catch(e => console.error("❌ Ошибка при фоллбеке:", e));
+      }
     }
 
     navigator.geolocation.getCurrentPosition(sendLocation, handleError, {
