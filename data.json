@@ -77,10 +77,13 @@
         "pets": []
     },
     "493715769": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
-            "link": "https://taplink.cc/ciceromaltese"
+            "link": "https://taplink.cc/ciceromaltese",
+            "owner_ids": [
+                "493715769"
+            ]
         }
     }
 }
