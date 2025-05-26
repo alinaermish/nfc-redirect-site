@@ -77,13 +77,16 @@
         "pets": []
     },
     "493715769": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://taplink.cc/ciceromaltese",
-            "owner_ids": [
-                "493715769"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://taplink.cc/ciceromaltese",
+                "owner_ids": [
+                    "493715769"
+                ],
+                "name": "\u0415\u0434\u0438\u043d\u043e\u0440\u043e\u0436\u043a\u0430",
+                "uuid": "ef9934d3-109a-4a57-bb4b-03db16c69e00"
+            }
+        ]
     }
 }
