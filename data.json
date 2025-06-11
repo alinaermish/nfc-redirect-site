@@ -88,5 +88,9 @@
                 "uuid": "ef9934d3-109a-4a57-bb4b-03db16c69e00"
             }
         ]
+    },
+    "6490354076": {
+        "step": "waiting_for_link",
+        "pets": []
     }
 }
