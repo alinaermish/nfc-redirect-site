@@ -1,13 +1,16 @@
 {
     "302108623": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://wa.me/test",
-            "owner_ids": [
-                "302108623"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://wa.me/test",
+                "owner_ids": [
+                    "302108623"
+                ],
+                "name": "Test December",
+                "uuid": "ea43cce1-651a-4b7b-b532-791fada7f19d"
+            }
+        ]
     },
     "386726980": {
         "step": "waiting_for_link",
