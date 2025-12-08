@@ -1,26 +1,7 @@
 {
     "302108623": {
         "step": "waiting_for_link",
-        "pets": [
-            {
-                "link": "https://taplink.cc/ciceromaltese",
-                "include_self": true,
-                "owner_ids": [
-                    "386726980",
-                    "302108623"
-                ],
-                "name": "\u0420\u043e\u043d\u0438",
-                "uuid": "2899870e-f295-4a11-82c2-5158a88f288b"
-            },
-            {
-                "link": "https://taplink.cc/ciceromaltese",
-                "owner_ids": [
-                    "302108623"
-                ],
-                "name": "Test",
-                "uuid": "0a924fd4-3cdd-4ed9-a077-dff472194718"
-            }
-        ]
+        "pets": []
     },
     "386726980": {
         "step": "waiting_for_link",
