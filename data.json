@@ -88,7 +88,10 @@
         "pets": []
     },
     "708986268": {
-        "step": "waiting_for_link",
-        "pets": []
+        "step": "confirm_redirect",
+        "pets": [],
+        "current_pet": {
+            "link": "https://t.me/+79635391161"
+        }
     }
 }
