@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const BOT_TOKEN = '8018448279:AAFGUqua1bsG73Wr8PKuoJjQhXP0UdOOXfQ';
+const BOT_TOKEN = process.env.BOT_TOKEN;
 
 module.exports = async (req, res) => {
   console.log("📩 [GET-LINK] Новый запрос получен");
