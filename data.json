@@ -1,9 +1,12 @@
 {
     "302108623": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
-            "link": "https://wa.me/+79050817547"
+            "link": "https://wa.me/+79050817547",
+            "owner_ids": [
+                "302108623"
+            ]
         }
     },
     "386726980": {
