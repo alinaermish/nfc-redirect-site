@@ -24,19 +24,6 @@
     },
     "386726980": {
         "step": "waiting_for_link",
-        "pets": [
-            {
-                "link": "https://wa.me/+79236510003",
-                "owner_ids": [
-                    "386726980"
-                ],
-                "name": "\u0416\u043c\u044b\u0445",
-                "uuid": "a619030f-38b9-43d6-b87e-d4a671c66ef3"
-            }
-        ]
-    },
-    "386726980": {
-        "step": "waiting_for_link",
         "pets": []
     },
     "746873176": {
@@ -113,5 +100,9 @@
                 "uuid": "3c74798d-9586-41d7-b6fe-0e116c83f119"
             }
         ]
+    },
+    "1790160715": {
+        "step": "waiting_for_link",
+        "pets": []
     }
 }
