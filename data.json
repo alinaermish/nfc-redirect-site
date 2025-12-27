@@ -102,10 +102,13 @@
         ]
     },
     "1790160715": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
-            "link": "https://t.me/+79237217802"
+            "link": "https://t.me/+79237217802",
+            "owner_ids": [
+                "1790160715"
+            ]
         }
     }
 }
