@@ -102,13 +102,16 @@
         ]
     },
     "1790160715": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://t.me/+79237217802",
-            "owner_ids": [
-                "1790160715"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://t.me/+79237217802",
+                "owner_ids": [
+                    "1790160715"
+                ],
+                "name": "\u0422\u0438\u0448\u043a\u0430",
+                "uuid": "ec526615-8982-4231-999f-fc6e88f5318d"
+            }
+        ]
     }
 }
