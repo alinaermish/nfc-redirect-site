@@ -89,10 +89,13 @@
         "pets": []
     },
     "708986268": {
-        "step": "ask_recipient",
+        "step": "ask_pet_name",
         "pets": [],
         "current_pet": {
-            "link": "https://t.me/+79635391161"
+            "link": "https://t.me/+79635391161",
+            "owner_ids": [
+                "708986268"
+            ]
         }
     },
     "1790160715": {
