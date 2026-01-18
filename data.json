@@ -90,16 +90,7 @@
     },
     "708986268": {
         "step": "waiting_for_link",
-        "pets": [
-            {
-                "link": "https://t.me/+79635391161",
-                "owner_ids": [
-                    "708986268"
-                ],
-                "name": "\u041c\u0430\u0439\u044f",
-                "uuid": "3c74798d-9586-41d7-b6fe-0e116c83f119"
-            }
-        ]
+        "pets": []
     },
     "1790160715": {
         "step": "waiting_for_link",
