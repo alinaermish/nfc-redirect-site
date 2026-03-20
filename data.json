@@ -117,5 +117,9 @@
     "200554116": {
         "step": "waiting_for_link",
         "pets": []
+    },
+    "1010304781": {
+        "step": "waiting_for_link",
+        "pets": []
     }
 }
