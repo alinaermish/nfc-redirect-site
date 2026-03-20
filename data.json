@@ -119,7 +119,10 @@
         "pets": []
     },
     "1010304781": {
-        "step": "waiting_for_link",
-        "pets": []
+        "step": "confirm_redirect",
+        "pets": [],
+        "current_pet": {
+            "link": "https://t.me/+79130225813"
+        }
     }
 }
