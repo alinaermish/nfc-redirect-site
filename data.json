@@ -119,13 +119,16 @@
         "pets": []
     },
     "1010304781": {
-        "step": "ask_pet_name",
-        "pets": [],
-        "current_pet": {
-            "link": "https://t.me/+79130225813",
-            "owner_ids": [
-                "1010304781"
-            ]
-        }
+        "step": "waiting_for_link",
+        "pets": [
+            {
+                "link": "https://t.me/+79130225813",
+                "owner_ids": [
+                    "1010304781"
+                ],
+                "name": "\u041c\u0430\u0444\u0444\u0438\u043d",
+                "uuid": "2b020a1f-5b11-48bb-ac58-d9b59ca3ac79"
+            }
+        ]
     }
 }
